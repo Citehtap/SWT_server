@@ -10,16 +10,16 @@ app = Flask(__name__)
 
 def index():
     if request.method == "GET":  # 判断请求方式是GET请求
-        my_signature = request.args.get('signature').encode("utf8")  # 获取携带的signature参数
+        my_signature = request.args.get('signature')  # 获取携带的signature参数
         print('signature:{0}'.format(my_signature))
 
-        my_timestamp = request.args.get('timestamp').encode("utf8")  # 获取携带的timestamp参数
+        my_timestamp = request.args.get('timestamp')  # 获取携带的timestamp参数
         print('timestamp:{0}'.format(my_timestamp))
 
-        my_nonce = request.args.get('nonce').encode("utf8")  # 获取携带的nonce参数
+        my_nonce = request.args.get('nonce')  # 获取携带的nonce参数
         print('nonce:{0}'.format(my_nonce))
 
-        my_echostr = request.args.get('echostr').encode("utf8")  # 获取携带的echostr参数
+        my_echostr = request.args.get('echostr')  # 获取携带的echostr参数
         print('echostr:{0}'.format(my_echostr))
 
         token = 'wxswt'  # 一定要跟刚刚填写的token一致
