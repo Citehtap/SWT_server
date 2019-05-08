@@ -16,8 +16,7 @@ def index():
         if cor:
             openid = request.args.get('openid')
             print('openid={0}'.format(openid))
-            print(request.data['runes'][0])
-
+            print(request.data)
             pass
 
 
