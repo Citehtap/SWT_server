@@ -19,6 +19,8 @@ def index():
             print(request.files)
             pass
             return msg
+        else:
+            return 'error'
 
 
 if __name__ == "__main__":
