@@ -16,8 +16,7 @@ def index():
         if cor:
             openid = request.args.get('openid')
             print('openid={0}'.format(openid))
-            print(type(request.data))
-            print(request.get_json(force=True))
+            print(request.files)
             pass
             return msg
 
