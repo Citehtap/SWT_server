@@ -16,7 +16,7 @@ def index():
         if cor:
             openid = request.args.get('openid')
             print('openid={0}'.format(openid))
-            print(request.files)
+            print(request.get_data())
             pass
             return msg
         else:
