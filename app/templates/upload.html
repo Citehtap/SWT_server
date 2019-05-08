@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<title>Summoners War Tools</title>
+{% if openid %}
+    <h1>Hello {{ openid }}!</h1>
+
+    <form action="" enctype='multipart/form-data' method='POST'>
+        <input type="file" name="file">
+        <input type="submit" value="上传">
+    </form>
+{% else %}
+  <h1>请先在公众号中获取openid</h1>
+{% endif %}

@@ -1,5 +1,6 @@
 import hashlib
 
+access_token = '21_rQuKH0pAav_gA61g7_gPxtMe5q3l3OmSgtR5mHhTKQvehpqMXgaCkfL9abSXl7E2K6mj8LYsDgzIccm0reG6wc0xerCCoUCoMTcEhK1hMMx7FHvIsRPPd3fzhMmFVrQjiUd6w56WVEt7zKW2BTTeAEAHZZ'
 
 def verify_signature(req):
     my_signature = req.args.get('signature')  # 获取携带的signature参数
@@ -31,3 +32,4 @@ def verify_signature(req):
         return True, my_echostr
     else:
         return False, 'Unverified signature!'
+
