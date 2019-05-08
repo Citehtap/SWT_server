@@ -17,7 +17,7 @@ def index():
             openid = request.args.get('openid')
             print('openid={0}'.format(openid))
             print(type(request.data))
-            print(request.data.decode())
+            print(request.get_json(force=True))
             pass
             return msg
 
