@@ -16,7 +16,7 @@ def index():
         if cor:
             openid = request.args.get('openid')
             print('openid={0}'.format(openid))
-            print(request.get_data())
+            print(request.get_data().encode())
             pass
             return msg
         else:
