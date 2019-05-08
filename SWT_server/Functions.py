@@ -17,9 +17,10 @@ def index():
             openid = request.args.get('openid')
             print('openid={0}'.format(openid))
             print(type(request.data))
-            print(request.data)
+            print(request.data.decode())
             pass
-        
+            return msg
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=80, debug=True)
