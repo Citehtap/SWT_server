@@ -5,6 +5,7 @@ import time
 import json
 import os
 import xml.etree.cElementTree as ET
+from data.monster_dict import monsters_name_map as mmp
 
 app = Flask(__name__)
 UPLOAD_FOLDER = '../../data'
@@ -29,9 +30,79 @@ def upload(openid=None):
     filename = str(openid) + '.json'
     if request.method == 'POST':
         f = request.files['file']
-        # basepath = os.path.dirname(__file__)  # 当前文件所在路径
-        upload_path = os.path.join(os.path.join(app.config['UPLOAD_FOLDER'], filename))  #注意：没有的文件夹一定要先创建，不然会提示没有该路径
+        upload_path = os.path.join(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         f.save(upload_path)
+        data = json.load(open(upload_path, 'r', encoding='utf-8'))
+        f.close()
+
+        target = dict()
+        target['wizard_name'] = data['wizard_info']['wizard_name']
+        target['wizard_id'] = data['wizard_info']['wizard_id']
+        target['unit_list'] = data['unit_list']
+        target['runes'] = data['runes']
+        for rune in target['runes']:
+            del rune['wizard_id']
+            del rune['occupied_id']
+            del rune['upgrade_limit']
+            del rune['upgrade_curr']
+            del rune['base_value']
+            del rune['sell_value']
+            eff = [0] * 13
+            eff[rune['pri_eff'][0]] += rune['pri_eff'][1]
+            eff[rune['prefix_eff'][0]] += rune['prefix_eff'][1]
+            for ef in rune['sec_eff']:
+                eff[ef[0]] += ef[1] + ef[3]
+            rune['eff'] = eff
+            del rune['pri_eff']
+            del rune['prefix_eff']
+            del rune['sec_eff']
+            del rune['extra']
+
+
+        for item in target['unit_list']:
+            del item['island_id']
+            del item['pos_x']
+            del item['pos_y']
+            del item['building_id']
+            del item['experience']
+            del item['exp_gained']
+            del item['exp_gain_rate']
+            del item['skills']
+            try:
+                item['monster_name'] = map[item['unit_master_id']]
+            except:
+                item['monster_name'] = 'UNKNOWN'
+
+            combination = [0]*24
+            runes_type = []
+            for rune in item['runes']:
+                del rune['wizard_id']
+                del rune['occupied_id']
+                del rune['upgrade_limit']
+                del rune['upgrade_curr']
+                del rune['base_value']
+                del rune['sell_value']
+                eff = [0] * 13
+                eff[rune['pri_eff'][0]] += rune['pri_eff'][1]
+                eff[rune['prefix_eff'][0]] += rune['prefix_eff'][1]
+                for ef in rune['sec_eff']:
+                    eff[ef[0]] += ef[1] + ef[3]
+                rune['eff'] = eff
+                del rune['pri_eff']
+                del rune['prefix_eff']
+                del rune['sec_eff']
+                del rune['extra']
+                combination[rune['set_id']] += 1
+                runes_type.append(rune['set_id'])
+                target['runes'].append(rune)
+            item['combination'] = combination
+            item['runes_type'] = runes_type
+
+        # save json
+        filename2 = str(openid) + '-c.json'
+        upload_path2 = os.path.join(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
+        with open(upload_path2, 'w+', encoding='utf-8') as t:
+            json.dump(target, t, ensure_ascii=False)
         return redirect(url_for('upload', openid=openid))
     return render_template('upload.html', openid=openid)
 
@@ -47,7 +118,7 @@ def weixin():
         msgType = xml.find("MsgType").text
 
         if msgType == 'text':
-            text = 'url: 118.25.157.231/upload/' + str(openid)
+            text = 'url: http://118.25.157.231/upload/' + str(openid)
             reply = '''<xml>
                                     <ToUserName><![CDATA[%s]]></ToUserName>
                                     <FromUserName><![CDATA[%s]]></FromUserName>
@@ -79,4 +150,4 @@ def weixin():
 
 if __name__ == '__main__':
     app.config['JSON_AS_ASCII'] = False
-    app.run(host='0.0.0.0', port=80, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
